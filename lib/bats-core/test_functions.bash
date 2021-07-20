@@ -34,15 +34,32 @@ run() {
   local origFlags="$-"
   set +eET
   local origIFS="$IFS"
+  if [[ "${TRACE_LEVEL}" -gt 0 ]]; then
+    printf "  Running: %s\n" "${*}" >&3
+  fi
+  # Prevent first level bats executuon from passing down TRACE_LEVEL
+  # to tests that run bats; see "dash-e is not mangled on beginning of line" test
+  local TRACE_LEVEL_OLD="${TRACE_LEVEL}"
+  unset TRACE_LEVEL
   # 'output', 'status', 'lines' are global variables available to tests.
   # shellcheck disable=SC2034
   output="$("$@" 2>&1)"
   # shellcheck disable=SC2034
   status="$?"
+  export TRACE_LEVEL="${TRACE_LEVEL_OLD}"
   # shellcheck disable=SC2034,SC2206
   IFS=$'\n' lines=($output)
+  if [[ "${TRACE_LEVEL}" -gt 1 ]]; then
+    printf "    %s\n" "${lines[@]}" >&3
+  fi
   IFS="$origIFS"
   set "-$origFlags"
+  if [ -w "${BATS_LOG}" ]; then
+    if [ -n "$output" ]; then
+      echo "[$$] Executing: $*" >> "${BATS_LOG}"
+      echo "$output" >> "${BATS_LOG}"
+    fi
+  fi
 }
 
 setup() {
@@ -80,6 +97,10 @@ skip() {
 
 bats_test_begin() {
   BATS_TEST_DESCRIPTION="$1"
+  if [ -w "${BATS_LOG}" ]; then
+    echo "[$$] starting '$BATS_SUITE_TEST_NUMBER' '$BATS_TEST_DESCRIPTION'" >> "${BATS_LOG}"
+    echo "[$$] <<< begin output >>>" >> "${BATS_LOG}"
+  fi
   if [[ -n "$BATS_EXTENDED_SYNTAX" ]]; then
     printf 'begin %d %s\n' "$BATS_SUITE_TEST_NUMBER" "$BATS_TEST_DESCRIPTION" >&3
   fi

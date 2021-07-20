@@ -46,7 +46,12 @@ HELP_TEXT_HEADER
   -p, --pretty              Shorthand for "--formatter pretty"
   -r, --recursive           Include tests in subdirectories
   -t, --tap                 Shorthand for "--formatter tap"
+  -l, --log                 Output a log file containing STDOUT/ERR from each test and commands
   -T, --timing              Add timing information to tests
+  -x, --trace <level>       Enable various levels of debug output when runing bats
+                              Levels:
+                                1 - Command being run are shown under each test
+                                2 - All within #1 + STDOUT/ERR is included below the command
   -v, --version             Display the version number
 
   For more information, see https://github.com/bats-core/bats-core
@@ -68,7 +73,7 @@ expand_path() {
   printf -v "$result" '%s/%s' "$dirname" "${path##*/}"
 }
 
-BATS_LIBEXEC="$(dirname "$(bats_readlinkf "${BASH_SOURCE[0]}")")"
+BATS_LIBEXEC="$(cd "$(dirname "$(bats_readlinkf "${BASH_SOURCE[0]}")")"; pwd)"
 export BATS_LIBEXEC
 export BATS_CWD="$PWD"
 export BATS_TEST_PATTERN="^[[:blank:]]*@test[[:blank:]]+(.*[^[:blank:]])[[:blank:]]+\{(.*)\$"
@@ -116,6 +121,7 @@ report_formatter=''
 recursive=
 export BATS_TEMPDIR_CLEANUP=1
 output=
+export TRACE_LEVEL="${TRACE_LEVEL:-""}"
 if [[ -z "${CI:-}" && -t 0 && -t 1 ]] && command -v tput >/dev/null; then
   formatter='pretty'
 fi
@@ -193,6 +199,10 @@ while [[ "$#" -ne 0 ]]; do
   --tempdir) # for internal test consumption only!
     BATS_RUN_TMPDIR="$2"
     shift
+    ;;
+  -x | --trace)
+    shift
+    export TRACE_LEVEL="${1}"
     ;;
   -*)
     abort "Bad command line option '$1'"

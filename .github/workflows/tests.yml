@@ -15,6 +15,7 @@ jobs:
           ./shellcheck.sh
 
   linux:
+    needs: shellcheck
     strategy:
       matrix:
         os: ['ubuntu-20.04', 'ubuntu-18.04', 'ubuntu-16.04']
@@ -32,8 +33,27 @@ jobs:
         run: |
           bash --version
           bash -c "time ${{ matrix.env_vars }} bin/bats --formatter tap test"
-          
+
+  npm_on_linux:
+    needs: shellcheck
+    strategy:
+      matrix:
+        os: ['ubuntu-20.04', 'ubuntu-18.04', 'ubuntu-16.04']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Run test on OS ${{ matrix.os }}
+        shell: 'script -q -e -c "bash {0}"' # work around tty issues
+        env:
+          TERM: linux # fix tput for tty issue work around
+        run: |
+          npm pack ./
+          sudo npm install -g ./bats-$(npm view ./package.json version).tgz
+          bats test  
+
   windows:
+    needs: shellcheck
     strategy:
       matrix:
         os: ['windows-2019']
@@ -48,8 +68,23 @@ jobs:
         run: |
           bash --version
           bash -c "time ${{ matrix.env_vars }} bin/bats --formatter tap test"
-          
+
+  npm_on_windows:
+    needs: shellcheck
+    strategy:
+      matrix:
+        os: ['windows-2019']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - run: |
+          npm pack ./
+          npm install -g ./bats-$(npm view ./package.json version).tgz
+          bats test        
+
   macos:
+    needs: shellcheck
     strategy:
       matrix:
         os: ['macos-10.15']
@@ -70,7 +105,29 @@ jobs:
           bash --version
           bash -c "time ${{ matrix.env_vars }} bin/bats --formatter tap test"
 
+  npm_on_macos:
+    needs: shellcheck
+    strategy:
+      matrix:
+        os: ['macos-10.15']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Install unbuffer via expect
+        run: brew install expect
+      - name: Run test on OS ${{ matrix.os }}
+        shell: 'unbuffer bash {0}' # work around tty issues
+        env:
+          TERM: linux # fix tput for tty issue work around
+        run: |
+          npm pack ./
+          # somehow there is already an intalled bats version around
+          npm install --force -g ./bats-$(npm view ./package.json version).tgz
+          bats test  
+
   bash-version:
+    needs: shellcheck
     strategy:
       matrix:
         version: ['3.2', '4.0', '4.1', '4.2', '4.3', '4.4', '4', '5.0', '5.1', '5', 'latest']
