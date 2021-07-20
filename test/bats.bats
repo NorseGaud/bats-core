@@ -874,7 +874,7 @@ EOF
   run cat "$TEMPFILE"
   echo "$output"
 
-  [[ "${lines[*]}" =~ "no ok 1 test" ]]
+  [[ "${lines[*]}" =~ "not ok 1 test" ]]
   [[ "${lines[*]}" =~ "# (in test file ${RELATIVE_FIXTURE_ROOT}/hang_in_run.bats, line 7)" ]]
   [[ "${lines[*]}" =~ "#   \`run sleep 10' failed with status 130" ]]
   [[ "${lines[*]}" =~ "# Received SIGINT, aborting ..." ]]
