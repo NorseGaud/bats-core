@@ -54,12 +54,6 @@ run() {
   fi
   IFS="$origIFS"
   set "-$origFlags"
-  if [ -w "${BATS_LOG}" ]; then
-    if [ -n "$output" ]; then
-      echo "[$$] Executing: $*" >> "${BATS_LOG}"
-      echo "$output" >> "${BATS_LOG}"
-    fi
-  fi
 }
 
 setup() {
@@ -97,10 +91,6 @@ skip() {
 
 bats_test_begin() {
   BATS_TEST_DESCRIPTION="$1"
-  if [ -w "${BATS_LOG}" ]; then
-    echo "[$$] starting '$BATS_SUITE_TEST_NUMBER' '$BATS_TEST_DESCRIPTION'" >> "${BATS_LOG}"
-    echo "[$$] <<< begin output >>>" >> "${BATS_LOG}"
-  fi
   if [[ -n "$BATS_EXTENDED_SYNTAX" ]]; then
     printf 'begin %d %s\n' "$BATS_SUITE_TEST_NUMBER" "$BATS_TEST_DESCRIPTION" >&3
   fi
