@@ -46,7 +46,6 @@ HELP_TEXT_HEADER
   -p, --pretty              Shorthand for "--formatter pretty"
   -r, --recursive           Include tests in subdirectories
   -t, --tap                 Shorthand for "--formatter tap"
-  -l, --log                 Output a log file containing STDOUT/ERR from each test and commands
   -T, --timing              Add timing information to tests
   -x, --trace <level>       Enable various levels of debug output when runing bats
                               Levels:
