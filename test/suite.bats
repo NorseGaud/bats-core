@@ -30,25 +30,25 @@ fixtures suite
   run bats "$FIXTURE_ROOT/multiple"
   [ $status -eq 0 ]
   [ "${lines[0]}" = "1..3" ]
-   | grep "^ok . truth"
-   | grep "^ok . more truth"
-   | grep "^ok . quasi-truth"
+  echo "$output" | grep "^ok . truth"
+  echo "$output" | grep "^ok . more truth"
+  echo "$output" | grep "^ok . quasi-truth"
 }
 
 @test "a failing test in a suite results in an error exit code" {
   FLUNK=1 run bats "$FIXTURE_ROOT/multiple"
   [ $status -eq 1 ]
   [ "${lines[0]}" = "1..3" ]
-   | grep "^not ok . quasi-truth"
+  echo "$output" | grep "^not ok . quasi-truth"
 }
 
 @test "running an ad-hoc suite by specifying multiple test files" {
   run bats "$FIXTURE_ROOT/multiple/a.bats" "$FIXTURE_ROOT/multiple/b.bats"
   [ $status -eq 0 ]
   [ "${lines[0]}" = "1..3" ]
-   | grep "^ok . truth"
-   | grep "^ok . more truth"
-   | grep "^ok . quasi-truth"
+  echo "$output" | grep "^ok . truth"
+  echo "$output" | grep "^ok . more truth"
+  echo "$output" | grep "^ok . quasi-truth"
 }
 
 @test "extended syntax in suite" {
@@ -70,7 +70,7 @@ fixtures suite
 @test "timing syntax in suite" {
   emulate_bats_env
   FLUNK=1 run bats-exec-suite -T "$FIXTURE_ROOT/multiple/"*.bats
-  
+  echo "$output"
   [ $status -eq 1 ]
   [ "${lines[0]}" = "1..3" ]
   regex="ok 1 truth in [0-9]+ms"
@@ -84,7 +84,7 @@ fixtures suite
 @test "extended timing syntax in suite" {
   emulate_bats_env
   FLUNK=1 run bats-exec-suite -x -T "$FIXTURE_ROOT/multiple/"*.bats
-  
+  echo "$output"
   [ $status -eq 1 ]
   [ "${lines[0]}" = "1..3" ]
   [ "${lines[1]}" = "suite $FIXTURE_ROOT/multiple/a.bats" ]
@@ -181,13 +181,13 @@ fixtures suite
 
 @test "BATS_TEST_NUMBER starts at 1 in each individual test file" {
   run bats "${FIXTURE_ROOT}/test_number"
-  
+  echo "$output"
   [ "$status" -eq 0 ]
 }
 
 @test "Override BATS_FILE_EXTENSION with suite" {
   BATS_FILE_EXTENSION=test run bats "${FIXTURE_ROOT}/override_BATS_FILE_EXTENSION"
-  
+  echo "$output"
   [ "$status" -eq 0 ]
   [ "${#lines[@]}" -eq 2 ]
   [ "${lines[0]}" = "1..1" ]
@@ -196,7 +196,7 @@ fixtures suite
 
 @test "Override BATS_FILE_EXTENSION with suite recursive" {
   BATS_FILE_EXTENSION=other_extension run bats -r "${FIXTURE_ROOT}/override_BATS_FILE_EXTENSION"
-  
+  echo "$output"
   [ "$status" -eq 0 ]
   [ "${#lines[@]}" -eq 2 ]
   [ "${lines[0]}" = "1..1" ]
