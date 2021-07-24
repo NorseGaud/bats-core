@@ -124,6 +124,7 @@ output=
 export TRACE_LEVEL="${TRACE_LEVEL:-}"
 export BATS_TRACE_COMMAND=
 export BATS_TRACE_COMMAND_OUTPUT=()
+export TRACE_ALREADY_ENABLED=
 
 if [[ -z "${CI:-}" && -t 0 && -t 1 ]] && command -v tput >/dev/null; then
   formatter='pretty'

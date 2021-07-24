@@ -54,7 +54,6 @@ fixtures suite
 @test "extended syntax in suite" {
   emulate_bats_env
   FLUNK=1 run bats-exec-suite -x "$FIXTURE_ROOT/multiple/"*.bats
-  echo "output: $output"
   [ $status -eq 1 ]
   [ "${lines[0]}" = "1..3" ]
   [ "${lines[1]}" = "suite $FIXTURE_ROOT/multiple/a.bats" ]

@@ -324,7 +324,7 @@ fixtures bats
   [ $status -eq 1 ]
   [ "${lines[1]}" = "suite $FIXTURE_ROOT/failing_and_passing.bats" ]
   [ "${lines[2]}" = 'begin 1 a failing test' ]
-  [ "${lines[4]}" = 'not ok 1 a failing test' ]
+  [ "${lines[3]}" = 'not ok 1 a failing test' ]
   [ "${lines[7]}" = 'begin 2 a passing test' ]
   [ "${lines[8]}" = 'ok 2 a passing test' ]
 }
@@ -346,7 +346,7 @@ fixtures bats
   [ $status -eq 1 ]
   regex="not ok 1 a failing test in [0-9]+ms"
   [ "${lines[2]}" = 'begin 1 a failing test' ]
-  [[ "${lines[4]}" =~ $regex ]]
+  [[ "${lines[3]}" =~ $regex ]]
   [ "${lines[7]}" = 'begin 2 a passing test' ]
   regex="ok 2 a passing test in [0-9]+ms"
   [[ "${lines[8]}" =~ $regex ]]
@@ -760,7 +760,7 @@ EOF
   local dir
   dir=$(mktemp -d "${BATS_RUN_TMPDIR}/BATS_RUN_TMPDIR_TEST.XXXXXX")
   run bats --tempdir "${dir}" "$FIXTURE_ROOT/passing.bats"
-  [ "$status" -eq 1 ]
+  [ "$status" -eq 0 ]
   [ "${lines[0]}" == "Error: BATS_RUN_TMPDIR (${dir}) already exists" ]
   [ "${lines[1]}" == "Reusing old run directories can lead to unexpected results ... aborting!" ]
 }
