@@ -8,7 +8,7 @@ teardown() {
 
 @test "test 2" {
     run cat "$FILE_MARKER"
-    echo "$output"
+    
 
     # assuming serialized, ordered execution we will always see the first test start and end before this runs
     [[ "${lines[0]}" == "start"* ]]

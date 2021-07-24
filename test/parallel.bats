@@ -54,7 +54,7 @@ check_parallel_tests() { # <expected maximum parallelity>
 @test "parallel can preserve environment variables" {
   export TEST_ENV_VARIABLE='test-value'
   run bats --jobs 2 "$FIXTURE_ROOT/parallel-preserve-environment.bats"
-  echo "$output"
+  
   [[ "$status" -eq 0 ]]
 }
 
@@ -67,7 +67,7 @@ check_parallel_tests() { # <expected maximum parallelity>
   unset BATS_NO_PARALLELIZE_ACROSS_FILES 
   run bash -c "bats --jobs $PARALLELITY \"${FIXTURE_ROOT}/suite/\" 2> >(grep -v '^parallel: Warning: ')"
 
-  echo "$output"
+  
   [ "$status" -eq 0 ]
 
   # Make sure the lines are in-order.
@@ -105,7 +105,7 @@ check_parallel_tests() { # <expected maximum parallelity>
 
 @test "running the same file twice runs its tests twice without errors" {
   run bats --jobs 2 "$FIXTURE_ROOT/../bats/passing.bats" "$FIXTURE_ROOT/../bats/passing.bats"
-  echo "$output"
+  
   [[ $status -eq 0 ]]
   [[ "${lines[0]}" == "1..2" ]] # got 2x1 tests
   [[ "${lines[1]}" == "ok 1 "* ]]
@@ -120,7 +120,7 @@ check_parallel_tests() { # <expected maximum parallelity>
   sleep 2
   # find how many semaphores are started in parallel; don't count grep itself
   run bash -c "ps -ef | grep bats-exec-test | grep parallel/parallel_factor.bats | grep -v grep"
-  echo "$output"
+  
   
   # This might fail spuriously if we got bad luck with the scheduler
   # and hit the transition between the first and second batch of tests.

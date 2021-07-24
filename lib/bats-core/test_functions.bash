@@ -34,24 +34,15 @@ run() {
   local origFlags="$-"
   set -f +eET
   local origIFS="$IFS"
-  if [[ "${TRACE_LEVEL}" -gt 0 ]]; then
-    printf "  Running: %s\n" "${*}" >&3
-  fi
-  # Prevent first level bats executuon from passing down TRACE_LEVEL
-  # to tests that run bats; see "dash-e is not mangled on beginning of line" test
-  local TRACE_LEVEL_OLD="${TRACE_LEVEL}"
-  unset TRACE_LEVEL
+  export BATS_TRACE_COMMAND="${*}"
   # 'output', 'status', 'lines' are global variables available to tests.
   # shellcheck disable=SC2034
   output="$("$@" 2>&1)"
   # shellcheck disable=SC2034
   status="$?"
-  export TRACE_LEVEL="${TRACE_LEVEL_OLD}"
   # shellcheck disable=SC2034,SC2206
   IFS=$'\n' lines=($output)
-  if [[ "${TRACE_LEVEL}" -gt 1 ]]; then
-    printf "    %s\n" "${lines[@]}" >&3
-  fi
+  export BATS_TRACE_COMMAND_OUTPUT+=($output)
   IFS="$origIFS"
   set "-$origFlags"
 }

@@ -49,7 +49,7 @@ setup_file() {
 @test "setup_file failure aborts tests for this file" {
   # this might need to mark them as skipped as the test count is already determined at this point
   run bats "$FIXTURE_ROOT/setup_file_failed.bats"
-  echo "$output"
+  
   [[ "${lines[0]}" == "1..2" ]]
   [[ "${lines[1]}" == "not ok 1 setup_file failed" ]]
   [[ "${lines[2]}" == "# (from function \`setup_file' in test file $RELATIVE_FIXTURE_ROOT/setup_file_failed.bats, line 2)" ]]
@@ -64,7 +64,7 @@ setup_file() {
 @test "teardown_file failure fails at least one test from the file" {
   run bats "$FIXTURE_ROOT/teardown_file_failed.bats"
   [[ $status -ne 0 ]]
-  echo "$output"
+  
   [[ "${lines[0]}" == "1..1" ]]
   [[ "${lines[1]}" == "ok 1 test" ]]
   [[ "${lines[2]}" == "not ok 2 teardown_file failed" ]]
@@ -81,7 +81,7 @@ setup_file() {
   run bats "$FIXTURE_ROOT/teardown_file_after_failing_test.bats"
   [[ $status -ne 0 ]]
   grep teardown_file_after_failing_test.bats "$LOG"
-  echo "$output"
+  
   [[ $output == "1..1
 not ok 1 failing test
 # (in test file $RELATIVE_FIXTURE_ROOT/teardown_file_after_failing_test.bats, line 6)
@@ -136,7 +136,7 @@ not ok 1 failing test
 @test "teardown_file must not leak context between tests in the same suite" {
   # example: BATS_ROOT was unset in one test but used in others, therefore, the suite failed
   run bats "$FIXTURE_ROOT/teardown_file_does_not_leak.bats" "$FIXTURE_ROOT/teardown_file_does_not_leak2.bats"
-  echo "$output"
+  
   [[ $status -eq 0 ]]
   [[ $output == "1..2
 ok 1 test
@@ -146,7 +146,7 @@ ok 2 must not see variable from first run" ]]
 @test "halfway setup_file errors are caught and reported" {
   run bats "$FIXTURE_ROOT/setup_file_halfway_error.bats"
   [ $status -ne 0 ]
-  echo "$output"
+  
   [ "${lines[0]}" == "1..1" ]
   [ "${lines[1]}" == "not ok 1 setup_file failed" ]
   [ "${lines[2]}" == "# (from function \`setup_file' in test file $RELATIVE_FIXTURE_ROOT/setup_file_halfway_error.bats, line 3)" ]
@@ -155,7 +155,7 @@ ok 2 must not see variable from first run" ]]
 
 @test "halfway teardown_file errors are caught and reported" {
   run bats "$FIXTURE_ROOT/teardown_file_halfway_error.bats"
-  echo "$output"
+  
   [[ $status -ne 0 ]]
   [[ "${lines[0]}" == "1..1" ]]
   [[ "${lines[1]}" == "ok 1 empty" ]]

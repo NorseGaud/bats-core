@@ -9,7 +9,7 @@ TESTSUITES_REGEX="<testsuites time=\"$FLOAT_REGEX\">"
 
 @test "junit formatter with skipped test does not fail" {
   run bats --formatter junit "$FIXTURE_ROOT/skipped.bats"
-  echo "$output"
+  
   [[ $status -eq 0 ]]
   [[ "${lines[0]}" == '<?xml version="1.0" encoding="UTF-8"?>' ]]
   
@@ -52,7 +52,7 @@ TESTSUITES_REGEX="<testsuites time=\"$FLOAT_REGEX\">"
   esac
   run bats --formatter junit "$TEST_FILE_PATH"
 
-  echo "$output"
+  
   [[ "${lines[2]}" == "<testsuite name=\"$ESCAPED_TEST_FILE_NAME\" tests=\"3\" failures=\"1\" errors=\"0\" skipped=\"1\" time=\""*"\" timestamp=\""*"\" hostname=\""*"\">" ]]
   [[ "${lines[3]}" == "    <testcase classname=\"$ESCAPED_TEST_FILE_NAME\" name=\"Successful test with escape characters: &quot;&#39;&lt;&gt;&amp;&#27;[0m (0x1b)\" time=\""*"\" />" ]]
   [[ "${lines[4]}" == "    <testcase classname=\"$ESCAPED_TEST_FILE_NAME\" name=\"Failed test with escape characters: &quot;&#39;&lt;&gt;&amp;&#27;[0m (0x1b)\" "* ]]
@@ -64,7 +64,7 @@ TESTSUITES_REGEX="<testsuites time=\"$FLOAT_REGEX\">"
 
 @test "junit formatter: test suites" {
   run bats --formatter junit "$FIXTURE_ROOT/suite/"
-  echo "$output"
+  
 
   [[ "${lines[0]}" == '<?xml version="1.0" encoding="UTF-8"?>' ]]
   [[ "${lines[1]}" == *"<testsuites "* ]]
@@ -80,7 +80,7 @@ TESTSUITES_REGEX="<testsuites time=\"$FLOAT_REGEX\">"
 @test "junit formatter: test suites relative path" {
   cd "$FIXTURE_ROOT"
   run bats --formatter junit "suite/"
-  echo "$output"
+  
 
   [[ "${lines[0]}" == '<?xml version="1.0" encoding="UTF-8"?>' ]]
   [[ "${lines[1]}" == *"<testsuites "* ]]
@@ -95,7 +95,7 @@ TESTSUITES_REGEX="<testsuites time=\"$FLOAT_REGEX\">"
 
 @test "junit formatter: files with the same name are distinguishable" {
   run bats --formatter junit -r "$FIXTURE_ROOT/duplicate/"
-  echo "$output"
+  
 
   [[ "${lines[2]}" == *"<testsuite name=\"first/file1.bats\""* ]]
   [[ "${lines[5]}" == *"<testsuite name=\"second/file1.bats\""* ]]
@@ -104,10 +104,10 @@ TESTSUITES_REGEX="<testsuites time=\"$FLOAT_REGEX\">"
 @test "junit formatter as report formatter creates report.xml" {
   cd "$BATS_TEST_TMPDIR" # don't litter sources with output files
   run bats --report-formatter junit "$FIXTURE_ROOT/suite/"
-  echo "$output"
+  
   [[ -e "report.xml" ]]
   run cat "report.xml"
-  echo "$output"
+  
   [[ "${lines[2]}" == *"<testsuite name=\"file1.bats\" tests=\"1\" failures=\"0\" errors=\"0\" skipped=\"0\""* ]]
   [[ "${lines[5]}" == *"<testsuite name=\"file2.bats\" tests=\"1\" failures=\"0\" errors=\"0\" skipped=\"0\""* ]]
 }
@@ -115,7 +115,7 @@ TESTSUITES_REGEX="<testsuites time=\"$FLOAT_REGEX\">"
 @test "junit does not mark tests with FD 3 output as failed (issue #360)" {
   run bats --formatter junit "$FIXTURE_ROOT/issue_360.bats"
 
-  echo "$output"
+  
 
   [[ "${lines[2]}" == '<testsuite name="issue_360.bats" '*'>' ]]
   [[ "${lines[3]}" == '    <testcase classname="issue_360.bats" '*'>' ]]

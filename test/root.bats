@@ -64,7 +64,7 @@ setup() {
 
   cd - >/dev/null
   run "$BATS_TEST_TMPDIR/bin/foo" -v
-  echo "$output"
+  
   [ "$status" -eq 0 ]
   [ "${output%% *}" == 'Bats' ]
 }

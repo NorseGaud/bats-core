@@ -83,6 +83,7 @@ export BATS_ROOT_PID=$$
 export BATS_TMPDIR="${TMPDIR:-/tmp}"
 export BATS_RUN_TMPDIR=
 
+
 if [[ ! -d "${BATS_TMPDIR}" ]];then
   printf "Error: BATS_TMPDIR (%s) does not exist or is not a directory" "${BATS_TMPDIR}" >&2
   exit 1
@@ -120,7 +121,10 @@ report_formatter=''
 recursive=
 export BATS_TEMPDIR_CLEANUP=1
 output=
-export TRACE_LEVEL="${TRACE_LEVEL:-""}"
+export TRACE_LEVEL="${TRACE_LEVEL:-}"
+export BATS_TRACE_COMMAND=
+export BATS_TRACE_COMMAND_OUTPUT=()
+
 if [[ -z "${CI:-}" && -t 0 && -t 1 ]] && command -v tput >/dev/null; then
   formatter='pretty'
 fi
