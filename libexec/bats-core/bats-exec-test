@@ -110,7 +110,7 @@ bats_exit_trap() {
       if [[ -n "$BATS_TRACE_COMMAND" ]]; then
         printf "# + %s\n" "${BATS_TRACE_COMMAND}" >&3
         # shellcheck disable=SC2128
-        if [[ -n "${BATS_TRACE_COMMAND_OUTPUT}" ]]; then
+        if [[ -n "${BATS_TRACE_COMMAND_OUTPUT[*]:-}" ]]; then
           printf "#   %s\n" "${BATS_TRACE_COMMAND_OUTPUT[@]}" >&3
         fi
       fi

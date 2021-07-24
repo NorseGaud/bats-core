@@ -109,7 +109,8 @@ run() { # [--keep-empty-lines] [--output merged|separate|stderr|stdout] [--] <co
     ;;
   esac
 
-  export BATS_TRACE_COMMAND="${*}"
+  # shellcheck disable=SC2034
+  BATS_TRACE_COMMAND="${*}"
 
   local origFlags="$-"
   set -f +eET
@@ -147,7 +148,8 @@ run() { # [--keep-empty-lines] [--output merged|separate|stderr|stdout] [--] <co
     ;;
   esac
 
-  export BATS_TRACE_COMMAND_OUTPUT=("${lines[@]}")
+  # shellcheck disable=SC2034
+  BATS_TRACE_COMMAND_OUTPUT=("${lines[@]:-}")
 
   IFS="$origIFS"
   set "-$origFlags"
