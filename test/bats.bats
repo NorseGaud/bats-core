@@ -760,7 +760,7 @@ EOF
   local dir
   dir=$(mktemp -d "${BATS_RUN_TMPDIR}/BATS_RUN_TMPDIR_TEST.XXXXXX")
   run bats --tempdir "${dir}" "$FIXTURE_ROOT/passing.bats"
-  [ "$status" -eq 0 ]
+  [ "$status" -eq 1 ]
   [ "${lines[0]}" == "Error: BATS_RUN_TMPDIR (${dir}) already exists" ]
   [ "${lines[1]}" == "Reusing old run directories can lead to unexpected results ... aborting!" ]
 }
