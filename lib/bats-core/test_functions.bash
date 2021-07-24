@@ -32,7 +32,7 @@ load() {
 run() {
   trap bats_interrupt_trap_in_run INT
   local origFlags="$-"
-  set +eET
+  set -f +eET
   local origIFS="$IFS"
   if [[ "${TRACE_LEVEL}" -gt 0 ]]; then
     printf "  Running: %s\n" "${*}" >&3
