@@ -109,9 +109,6 @@ run() { # [--keep-empty-lines] [--output merged|separate|stderr|stdout] [--] <co
     ;;
   esac
 
-  # shellcheck disable=SC2034
-  BATS_TRACE_COMMAND="${*}"
-
   local origFlags="$-"
   set -f +eET
   local origIFS="$IFS"
@@ -149,7 +146,14 @@ run() { # [--keep-empty-lines] [--output merged|separate|stderr|stdout] [--] <co
   esac
 
   # shellcheck disable=SC2034
+  BATS_TRACE_COMMAND="+ ${*}"
   BATS_TRACE_COMMAND_OUTPUT=("${lines[@]:-}")
+  if [[ "${BATS_TRACE_LEVEL}" -gt 0 || -z "${BATS_TRACE_LEVEL}" ]]; then
+    BATS_TRACE_OUTPUT_COMBINED+=("${BATS_TRACE_COMMAND}")
+    if [[ ( "${BATS_TRACE_LEVEL}" -gt 1 || -z "${BATS_TRACE_LEVEL}" ) && -n "${BATS_TRACE_COMMAND_OUTPUT[@]}" ]]; then
+      BATS_TRACE_OUTPUT_COMBINED+=("${BATS_TRACE_COMMAND_OUTPUT[@]}")
+    fi
+  fi
 
   IFS="$origIFS"
   set "-$origFlags"
