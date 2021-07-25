@@ -121,7 +121,7 @@ report_formatter=''
 recursive=
 export BATS_TEMPDIR_CLEANUP=1
 output=
-export TRACE_LEVEL="${TRACE_LEVEL:-}"
+export BATS_TRACE_LEVEL="${BATS_TRACE_LEVEL:-}"
 export BATS_TRACE_COMMAND=
 export BATS_TRACE_COMMAND_OUTPUT=()
 
@@ -205,7 +205,7 @@ while [[ "$#" -ne 0 ]]; do
     ;;
   -x | --trace)
     shift
-    export TRACE_LEVEL="${1}"
+    export BATS_TRACE_LEVEL="${1}"
     ;;
   -*)
     abort "Bad command line option '$1'"

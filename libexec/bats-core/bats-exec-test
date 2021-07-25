@@ -106,7 +106,7 @@ bats_exit_trap() {
       BATS_ERROR_STATUS=1
     fi
     printf 'not ok %d %s\n' "$BATS_SUITE_TEST_NUMBER" "${BATS_TEST_DESCRIPTION}${BATS_TEST_TIME}" >&3
-    if [[ -z "${TRACE_LEVEL}" || "${TRACE_LEVEL}" -gt 0 ]]; then
+    if [[ -z "${BATS_TRACE_LEVEL}" || "${BATS_TRACE_LEVEL}" -gt 0 ]]; then
       if [[ -n "$BATS_TRACE_COMMAND" ]]; then
         printf "# + %s\n" "${BATS_TRACE_COMMAND}" >&3
         # shellcheck disable=SC2128
@@ -127,10 +127,10 @@ bats_exit_trap() {
 
     status=1
   else
-    if [[ "${TRACE_LEVEL}" -gt 0 && -n "$BATS_TRACE_COMMAND" ]]; then
+    if [[ "${BATS_TRACE_LEVEL}" -gt 0 && -n "$BATS_TRACE_COMMAND" ]]; then
       printf " + %s\n" "${BATS_TRACE_COMMAND}" >&3
       # shellcheck disable=SC2128
-      if [[ "${TRACE_LEVEL}" -gt 1 && -n "${BATS_TRACE_COMMAND_OUTPUT}" ]]; then
+      if [[ "${BATS_TRACE_LEVEL}" -gt 1 && -n "${BATS_TRACE_COMMAND_OUTPUT}" ]]; then
         printf "   %s\n" "${BATS_TRACE_COMMAND_OUTPUT[@]}" >&3
       fi
     fi
