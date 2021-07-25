@@ -83,7 +83,6 @@ export BATS_ROOT_PID=$$
 export BATS_TMPDIR="${TMPDIR:-/tmp}"
 export BATS_RUN_TMPDIR=
 
-
 if [[ ! -d "${BATS_TMPDIR}" ]];then
   printf "Error: BATS_TMPDIR (%s) does not exist or is not a directory" "${BATS_TMPDIR}" >&2
   exit 1

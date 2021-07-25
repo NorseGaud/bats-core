@@ -64,7 +64,6 @@ bats_separate_lines() { # <output-array> <input-var>
 }
 
 run() { # [--keep-empty-lines] [--output merged|separate|stderr|stdout] [--] <command to run...>
-
   trap bats_interrupt_trap_in_run INT
   local keep_empty_lines=
   local output_case=merged
@@ -150,7 +149,7 @@ run() { # [--keep-empty-lines] [--output merged|separate|stderr|stdout] [--] <co
   BATS_TRACE_COMMAND_OUTPUT=("${lines[@]:-}")
   if [[ "${BATS_TRACE_LEVEL}" -gt 0 || -z "${BATS_TRACE_LEVEL}" ]]; then
     BATS_TRACE_OUTPUT_COMBINED+=("${BATS_TRACE_COMMAND}")
-    if [[ ( "${BATS_TRACE_LEVEL}" -gt 1 || -z "${BATS_TRACE_LEVEL}" ) && -n "${BATS_TRACE_COMMAND_OUTPUT[@]}" ]]; then
+    if [[ ( "${BATS_TRACE_LEVEL}" -gt 1 || -z "${BATS_TRACE_LEVEL}" ) && -n "${BATS_TRACE_COMMAND_OUTPUT[*]}" ]]; then
       BATS_TRACE_OUTPUT_COMBINED+=("${BATS_TRACE_COMMAND_OUTPUT[@]}")
     fi
   fi
