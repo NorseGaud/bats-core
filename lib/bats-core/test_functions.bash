@@ -146,11 +146,10 @@ run() { # [--keep-empty-lines] [--output merged|separate|stderr|stdout] [--] <co
 
   # shellcheck disable=SC2034
   BATS_TRACE_COMMAND="+ ${*}"
-  BATS_TRACE_COMMAND_OUTPUT=("${lines[@]:-}")
   if [[ "${BATS_TRACE_LEVEL}" -gt 0 || -z "${BATS_TRACE_LEVEL}" ]]; then
     BATS_TRACE_OUTPUT_COMBINED+=("${BATS_TRACE_COMMAND}")
-    if [[ ( "${BATS_TRACE_LEVEL}" -gt 1 || -z "${BATS_TRACE_LEVEL}" ) && -n "${BATS_TRACE_COMMAND_OUTPUT[*]}" ]]; then
-      BATS_TRACE_OUTPUT_COMBINED+=("${BATS_TRACE_COMMAND_OUTPUT[@]}")
+    if [[ ( "${BATS_TRACE_LEVEL}" -gt 1 || -z "${BATS_TRACE_LEVEL}" ) && -n "${lines[*]:-}" ]]; then
+      BATS_TRACE_OUTPUT_COMBINED+=("${lines[@]:-}")
     fi
   fi
 

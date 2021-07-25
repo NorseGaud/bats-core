@@ -1000,3 +1000,72 @@ EOF
   run stars
   [ "${lines[0]}" = '**' ]
 }
+
+
+@test "--trace: 0 + BATS_TRACE_LEVEL=0 doesn't show anything on failure" {
+  OUTPUT="$(bats --trace 0 --filter "test 1" "$FIXTURE_ROOT/read_from_stdin.bats")"
+  [[ "${OUTPUT[@]}" == "1..1
+ok 1 test 1" ]]
+  BATS_TRACE_LEVEL=0
+  OUTPUT="$(bats --filter "test 1" "$FIXTURE_ROOT/read_from_stdin.bats")"
+  [[ "${OUTPUT[@]}" == "1..1
+ok 1 test 1" ]]
+  unset BATS_TRACE_LEVEL
+}
+
+@test "--trace: 1 + BATS_TRACE_LEVEL=1" {
+  OUTPUT="$(bats --trace 1 --filter "test 1" "$FIXTURE_ROOT/read_from_stdin.bats")"
+  [[ "${OUTPUT}" =~ "1..1" ]]
+  echo "---------------"
+  echo "${OUTPUT}"
+  echo "$FIXTURE_ROOT"
+  [[ "${OUTPUT}" =~ "   + bash -c $FIXTURE_ROOT/cmd_using_stdin.bash" ]]
+  [[ "${OUTPUT}" =~ "ok 1 test 1" ]]
+  run bats --trace 1 --filter "test 1" "$FIXTURE_ROOT/read_from_stdin.bats"
+  [ $status -eq 0 ]
+  [ "${lines[0]}" = "1..1" ]
+  [ "${lines[1]}" = "   + bash -c $FIXTURE_ROOT/cmd_using_stdin.bash" ]
+  [ "${lines[2]}" = "ok 1 test 1" ]
+  BATS_TRACE_LEVEL=1
+  run bats --filter "test 1" "$FIXTURE_ROOT/read_from_stdin.bats"
+  [ $status -eq 0 ]
+  [ "${lines[0]}" = "1..1" ]
+  [ "${lines[1]}" = "   + bash -c $FIXTURE_ROOT/cmd_using_stdin.bash" ]
+  [ "${lines[2]}" = "ok 1 test 1" ]
+  unset BATS_TRACE_LEVEL
+}
+
+@test "--trace: 2 + BATS_TRACE_LEVEL=2" {
+  OUTPUT="$(bats --trace 2 --filter "test 1" "$FIXTURE_ROOT/read_from_stdin.bats")"
+  [[ "${OUTPUT}" =~ "1..1" ]]
+  [[ "${OUTPUT}" =~ "+ bash -c $FIXTURE_ROOT/cmd_using_stdin.bash" ]]
+  [[ "${OUTPUT}" =~ "Not found" ]]
+  [[ "${OUTPUT}" =~ "ok 1 test 1" ]]
+  run bats --trace 2 --filter "test 1" "$FIXTURE_ROOT/read_from_stdin.bats"
+  [ $status -eq 0 ]
+  [ "${lines[0]}" = "1..1" ]
+  [ "${lines[1]}" = "   + bash -c $FIXTURE_ROOT/cmd_using_stdin.bash" ]
+  [ "${lines[2]}" = "   Not found" ]
+  [ "${lines[3]}" = "ok 1 test 1" ]
+  BATS_TRACE_LEVEL=2
+  run bats --filter "test 1" "$FIXTURE_ROOT/read_from_stdin.bats"
+  [ $status -eq 0 ]
+  [ "${lines[0]}" = "1..1" ]
+  [ "${lines[1]}" = "   + bash -c $FIXTURE_ROOT/cmd_using_stdin.bash" ]
+  [ "${lines[2]}" = "   Not found" ]
+  [ "${lines[3]}" = "ok 1 test 1" ]
+  unset BATS_TRACE_LEVEL
+}
+
+@test "--trace: 2 on failure + nested bats showing properly" {
+  run bats "$FIXTURE_ROOT/failing_complex.bats"
+  [ $status -eq 1 ]
+  [ "${lines[0]}" = "1..1" ]
+  [ "${lines[1]}" = "not ok 1 a complex failing test" ]
+  [ "${lines[3]}" = "#   \`[ \$status -eq 0 ]' failed" ]
+  [ "${lines[4]}" = "# 123" ]
+  [ "${lines[5]}" = "# + bats $FIXTURE_ROOT/failing.bats" ]
+  [ "${lines[6]}" = "# 1..1" ]
+  [ "${lines[7]}" = "# not ok 1 a failing test" ]
+  [ "${lines[9]}" = "# #   \`eval \"( exit \${STATUS:-1} )\"' failed" ]
+}
