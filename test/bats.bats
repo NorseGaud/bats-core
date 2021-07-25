@@ -325,8 +325,8 @@ fixtures bats
   [ "${lines[1]}" = "suite $FIXTURE_ROOT/failing_and_passing.bats" ]
   [ "${lines[2]}" = 'begin 1 a failing test' ]
   [ "${lines[3]}" = 'not ok 1 a failing test' ]
-  [ "${lines[7]}" = 'begin 2 a passing test' ]
-  [ "${lines[8]}" = 'ok 2 a passing test' ]
+  [ "${lines[6]}" = 'begin 2 a passing test' ]
+  [ "${lines[7]}" = 'ok 2 a passing test' ]
 }
 
 @test "timing syntax" {
@@ -347,9 +347,9 @@ fixtures bats
   regex="not ok 1 a failing test in [0-9]+ms"
   [ "${lines[2]}" = 'begin 1 a failing test' ]
   [[ "${lines[3]}" =~ $regex ]]
-  [ "${lines[7]}" = 'begin 2 a passing test' ]
+  [ "${lines[6]}" = 'begin 2 a passing test' ]
   regex="ok 2 a passing test in [0-9]+ms"
-  [[ "${lines[8]}" =~ $regex ]]
+  [[ "${lines[7]}" =~ $regex ]]
 }
 
 @test "time is greater than 0ms for long test" {
@@ -388,7 +388,7 @@ fixtures bats
   [ "${lines[3]}" =  'ok 3 input redirection' ]
   [ "${lines[4]}" =  'not ok 4 failing' ]
   [ "${lines[5]}" =  "# (in test file $RELATIVE_FIXTURE_ROOT/single_line.bats, line 9)" ]
-  [ "${lines[6]}" = $'#   \'@test "failing" { false; }\' failed' ]
+  [ "${lines[6]}" = $'#   `@test "failing" { false; }\' failed' ]
 }
 
 @test "testing IFS not modified by run" {
